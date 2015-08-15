@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include"ip_hdr.h"
+#include<string.h>
 void print_ip_hdr(IP_HDR *ip_pkt){
 	unsigned char c = 0;
 	printf("IP pkt %p IP pkt +1 %p\n",ip_pkt,(void *)ip_pkt+1);
@@ -28,3 +29,10 @@ void print_ip_hdr(IP_HDR *ip_pkt){
 	print_mem(&(ip_pkt->dst.addr),4);
 	
 }
+void init_ipv4_hdr_wo_option(IP_HDR *ip_pkt){
+	bzero(ip_pkt,IP_HDR_WO_OPT_LEN);
+	ip_pkt->ver =4;
+	ip_pkt->hdr_len = 5;
+}
+
+
