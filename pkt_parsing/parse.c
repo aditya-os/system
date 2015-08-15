@@ -63,7 +63,7 @@ int main()
 		is_ip = get_ether_proto(ntohs(frame->protocol.type));
 		if ( is_ip == ETHER_IP )
 		{
-			ip_hdr = pkt + ETHERNET_FRAME_LEN ;
+			ip_hdr = (IP_HDR *) (pkt + ETHERNET_FRAME_LEN) ;
 			printf("IP hdr %p\n",ip_hdr);
 			print_ip_hdr(ip_hdr);
 		}
