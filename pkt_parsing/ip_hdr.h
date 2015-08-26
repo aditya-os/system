@@ -1,5 +1,8 @@
 #define IP_ADDR_LEN 4
 #define IP_HDR_WO_OPT_LEN 20
+
+#define IP_PROTO_ICMP 0x01
+
 typedef struct ip_addr{
 	char addr[IP_ADDR_LEN];
 }IP_ADDR;

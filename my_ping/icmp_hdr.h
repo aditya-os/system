@@ -1,4 +1,5 @@
 #define ICMP_ECHO 0x08;
+#define ICMP_ECHO_HDR_LEN 8
 typedef struct icmp_hdr{
 	char type;
 	char code;

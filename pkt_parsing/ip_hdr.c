@@ -75,8 +75,8 @@ void print_ip_hdr(IP_HDR *ip_pkt){
 	printf("Destination IP\n");
 	print_mem(&(ip_pkt->dst.addr),4);
 
-	printf("verification %u\n",ipv4_chksm((short *)ip_pkt,ip_pkt->hdr_len*2));
-	ip_pkt->hdr_chksm=0;
+//	printf("verification %u\n",ipv4_chksm((short *)ip_pkt,ip_pkt->hdr_len*2));
+//	ip_pkt->hdr_chksm=0;
 //	printf("Chksm via calculation %x\n",ipv4_chksm((short *)ip_pkt,ip_pkt->hdr_len*2));
 	//print_mem
 }

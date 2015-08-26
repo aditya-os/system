@@ -146,6 +146,12 @@ void swap_bytes(unsigned short d){
 	printf("%u\n",d|t);	
 	return;
 }
+
+unsigned long long  get_time_milli_sec(struct timeval *tv){
+	long long  msec;
+	msec = tv->tv_sec * 1000 + (tv->tv_usec)/1000;
+	return msec;
+}
 /*
 int main(){
 	struct	record *r,r2={0,};
