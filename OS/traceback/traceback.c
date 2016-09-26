@@ -1,7 +1,6 @@
-#define __USE_GNU
-#include<stdio.h>
-#include<link.h>
 #define _GNU_SOURCE
+#include<stdio.h>
+//#include<link.h>
 #include<dlfcn.h>
 struct base_ptr{
 	struct base_ptr *next;
@@ -12,14 +11,14 @@ int val_div(int a,int b);
 int val_sub(int a,int b);
 int val_mod(int a,int b);
 const char * get_func_name(void *fnp){
-//	struct Dl_info info;
 	Dl_info info;
 //	void *info ;
 	int ret;
 	ret = dladdr(fnp,&info);
-	if(ret < 0)
-		return NULL;
-//	return info.dli_fname;
+	if(ret > 0){
+		printf("function name : %s\n",info.dli_sname );
+	}
+	return NULL;
 }
 void traceback(){
 //	register struct base_ptr *b asm("ebp");
@@ -35,6 +34,7 @@ void traceback(){
 		base = base->next;
 	}
 	//printf("base %p rtn %p\n",base,base->rtn_addr);
+	printf("\n\nbacktrace\n\n");
 	n = backtrace(fp,10);
 	for(i=0;i<n;i++)
 		printf("stack pointer%p\n",fp[i]);
