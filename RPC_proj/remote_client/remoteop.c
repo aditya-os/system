@@ -5,20 +5,38 @@
 //#include<fcntl.h>
 #include<errno.h>
 #include<dlfcn.h>
-typedef int (*open_fn)(char *fname,int flags,mode_t m);
-typedef int (*read_fn)(int fd,char *buff, int size);
-typedef int (*write_fn)(int fd,char *buff, int size);
-typedef int (*close_fn)(int fd);
+#include<unistd.h>
+#include"remoteop.h"
+#include"remote_client_conn_setup.h"
+#include"marshal_remote_call.h"
 int open(char *fname, int flags, mode_t m ){
-	int res;
+	int res,serv_conn_fd,msg_sz,ret;
+	void *rem_req;
 	open_fn orig_open;
+	rem_req_t req;
 	printf("This is passthrough Layer: open\n");
 	orig_open = dlsym(RTLD_NEXT,"open");
 	res = orig_open(fname,flags,m);
+	serv_conn_fd = setup_client_connection();
+	if(serv_conn_fd < 0 ){
+		return -1;
+	}
+	printf("Connection Established\n");
+	printf("File name %s \n",fname);
+	printf("Flags %d \n",flags);
+	printf("mode %d \n",m);
+	remote_open_req(&req,fname,flags,m);
+	rem_req = marshal_open_params(&req,&msg_sz);
+	if(!rem_req){
+		return -1;
+	}
+	ret = write(serv_conn_fd,rem_req,msg_sz);
+	if(ret < msg_sz )
+		return -1;	
 //	errno = EINVAL;
 	return res;
 }
-
+/*
 int read(int fd,char *buff, int n){
 	int res;
 	read_fn orig_read;
@@ -47,3 +65,5 @@ int close(int fd){
 	res = orig_close(fd);
 	return res ; 
 }
+
+*/
