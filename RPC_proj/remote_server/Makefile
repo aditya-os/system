@@ -1,9 +1,8 @@
 CC=gcc
 CFLAGS = -Wall
 LIBS = -ldl 
-#C_SRC = remote_client_conn_setup.c remoteop.c 
-C_SRC = $(shell ls *.c)
-#H_SRC = remote_client_conn_setup.h  remoteop.h 
+#C_SRC = $(shell ls *.c)
+C_SRC = server_procedures.c  server_unmarshall_req.c server.c server_marshal_res.c 
 H_SRC = $(shell ls *.h)
 H_SRC += ../remote_client/remoteop.h 
 OBJS_FILES= $(C_SRC:.c=.o)

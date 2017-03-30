@@ -19,11 +19,17 @@ typedef int (*close_fn)(int fd);
 #define REMOP_READ 	2
 #define REMOP_WRITE 	3
 #define REMOP_CLOSE	4
+/* Request side structures */
 typedef struct open_params{
 	char filename[FILENAME_LEN];
 	int flags;
 	int mode;
 }open_params_t;
+typedef struct read_params{
+	open_params_t open;
+	int read_offset;
+	int read_sz;		
+}read_params_t;
 typedef struct rem_req{
 	int rem_op; 
 	union op_parms{
@@ -31,5 +37,21 @@ typedef struct rem_req{
 	}u;
 }rem_req_t;
 
-
+/* Responde side structures */
+typedef struct open_return{
+	int ret_val;
+	int err_no;
+}open_return_t;
+typedef struct rem_res{
+	int rem_op; 
+	union op_result{
+		open_return_t open_res;	
+	}u;
+}rem_res_t;
+/*Remote file operation structure */
+typedef struct rem_file{
+	rem_req_t open;
+	int state;
+	int offset;
+}rem_file_t;
 #endif // REMOP_H

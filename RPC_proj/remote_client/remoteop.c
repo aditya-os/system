@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include<stdio.h>
+#include<stdlib.h>
 #include<sys/types.h>
 #include<sys/stat.h>
 //#include<fcntl.h>
@@ -9,14 +10,35 @@
 #include"remoteop.h"
 #include"remote_client_conn_setup.h"
 #include"marshal_remote_call.h"
+#include"unmarshal_remote_res.h"
+void * get_res_buff(){
+	void *buff;
+	int sz = 0 ;
+	sz = sizeof(rem_res_t);
+	buff = malloc(sz);
+	if(!buff)
+		NULL;
+	return buff;
+}
+int get_res_size(int op){
+	int sz = 0 ; 
+	sz = sizeof(int); // sizeof of response code i.e first field in rem_res_t 
+	switch (op){
+		case REMOP_OPEN:
+		sz += sizeof(open_return_t);
+		break;
+	}
+	return sz;
+}
 int open(char *fname, int flags, mode_t m ){
-	int res,serv_conn_fd,msg_sz,ret;
-	void *rem_req;
+	int fd,serv_conn_fd,msg_sz,ret,res_sz;
+	void *rem_req,*rem_res;
 	open_fn orig_open;
 	rem_req_t req;
+	rem_res_t res;
 	printf("This is passthrough Layer: open\n");
 	orig_open = dlsym(RTLD_NEXT,"open");
-	res = orig_open(fname,flags,m);
+	fd = orig_open(fname,flags,m);
 	serv_conn_fd = setup_client_connection();
 	if(serv_conn_fd < 0 ){
 		return -1;
@@ -25,6 +47,7 @@ int open(char *fname, int flags, mode_t m ){
 	printf("File name %s \n",fname);
 	printf("Flags %d \n",flags);
 	printf("mode %d \n",m);
+	/*Connect with remote service and send request*/
 	remote_open_req(&req,fname,flags,m);
 	rem_req = marshal_open_params(&req,&msg_sz);
 	if(!rem_req){
@@ -32,9 +55,20 @@ int open(char *fname, int flags, mode_t m ){
 	}
 	ret = write(serv_conn_fd,rem_req,msg_sz);
 	if(ret < msg_sz )
-		return -1;	
+		return -1;
+	/* Wait for reply */
+	rem_res = get_res_buff();
+	ret = read(serv_conn_fd,rem_res,sizeof(rem_res_t));
+	if(ret< 0 || ret < res_sz){
+		return -1;
+	}
+	unmarshal_open_res_msg(rem_res,ret,&res);
+	printf("Open:Remote Operation executed \n");
+	printf("Open:Rem_op %d \n",res.rem_op);
+	printf("Open:ret_val %d  \n",res.u.open_res.ret_val);
+	printf("Open:err_no %d \n",res.u.open_res.err_no);
 //	errno = EINVAL;
-	return res;
+	return fd;
 }
 /*
 int read(int fd,char *buff, int n){

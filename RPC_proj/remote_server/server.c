@@ -10,7 +10,9 @@
 #include<assert.h>
 #include"server.h"
 #include"../remote_client/remoteop.h"
-#include"unmarshall_req.h"
+#include"server_unmarshall_req.h"
+#include"server_procedures.h"
+#include"server_marshal_res.h"
 char * get_serv_IP_addr(){
         char *env="REMOP_SERVER_IP";
         char *serv_ip;
@@ -35,22 +37,27 @@ short get_serv_port(){
 
 void process_client_connection(int session_fd){
 	rem_req_t req;
+	rem_res_t res;
 	int buf_sz,ret,rem_op,processed=0;
-	void *buffer;
-	buffer= malloc(sizeof(req));
-	if(!buffer)
+	void *req_buffer, *res_buff;
+	req_buffer= malloc(sizeof(req));
+	if(!req_buffer)
 		return ;
 	buf_sz = sizeof(req);
-	ret = read(session_fd,buffer,buf_sz);
+	ret = read(session_fd,req_buffer,buf_sz);
 	if(ret<=0)
 		return ;
-	memcpy(&rem_op,buffer,sizeof(rem_op));
+	memcpy(&rem_op,req_buffer,sizeof(rem_op));
 	processed +=sizeof(rem_op);
 	rem_op = ntohl(rem_op);
 	switch(rem_op){
 		case REMOP_OPEN:
 			printf("Client requested OPEN\n");
-			unmarshall_req_msg(buffer,&req,REMOP_OPEN);
+			unmarshall_req_msg(req_buffer,&req,REMOP_OPEN);
+			ret = execute_open_procedure(&req,&res);
+			buf_sz = 0 ;
+			res_buff = marshal_open_res_msg(&res,&buf_sz);
+			ret = write(session_fd,res_buff,buf_sz);
 		break;
 		case REMOP_READ:
 			printf("Client requested READ\n");
@@ -62,6 +69,8 @@ void process_client_connection(int session_fd){
 			printf("Client requested CLOSE\n");
 		break; 
 	}
+	free(req_buffer);
+	free(res_buff);
 	
 }
 
