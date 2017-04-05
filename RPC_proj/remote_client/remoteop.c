@@ -33,6 +33,7 @@ int get_res_size(int op){
 int open(char *fname, int flags, mode_t m ){
 	int fd,serv_conn_fd,msg_sz,ret,res_sz;
 	void *rem_req,*rem_res;
+	rem_file_t *rf;
 	open_fn orig_open;
 	rem_req_t req;
 	rem_res_t res;
@@ -67,6 +68,7 @@ int open(char *fname, int flags, mode_t m ){
 	printf("Open:Rem_op %d \n",res.rem_op);
 	printf("Open:ret_val %d  \n",res.u.open_res.ret_val);
 	printf("Open:err_no %d \n",res.u.open_res.err_no);
+	
 //	errno = EINVAL;
 	return fd;
 }

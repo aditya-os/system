@@ -28,20 +28,25 @@ typedef struct open_params{
 typedef struct read_params{
 	open_params_t open;
 	int read_offset;
-	int read_sz;		
+	int read_sz;
 }read_params_t;
 typedef struct rem_req{
 	int rem_op; 
 	union op_parms{
 		open_params_t open_param;
+		read_params_t read_param;
 	}u;
 }rem_req_t;
 
-/* Responde side structures */
+/* Response side structures */
 typedef struct open_return{
 	int ret_val;
 	int err_no;
 }open_return_t;
+typedef struct read_return{
+	int ret_val;
+	int err_no;
+}read_return_t;
 typedef struct rem_res{
 	int rem_op; 
 	union op_result{
@@ -52,6 +57,7 @@ typedef struct rem_res{
 typedef struct rem_file{
 	rem_req_t open;
 	int state;
-	int offset;
+	int file_offset;
+	
 }rem_file_t;
 #endif // REMOP_H
