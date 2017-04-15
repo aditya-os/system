@@ -138,6 +138,7 @@ NOTES:
  *   Max ops: 8
  *   Rating: 1
  */
+#include<stdio.h>
 int bitAnd(int x, int y) {
   return ~((~x)|(~y));
 }
@@ -226,7 +227,10 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+	int res;
+	res = (x>>(n-1));
+		
+  return (!res) + !(res^0xffffffff) ;
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -237,7 +241,10 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
+	int mask = 0x80000000,neg ; 
+	neg = mask & x ; 
+	
+    return x>>n;
 }
 /* 
  * negate - return -x 
@@ -247,7 +254,10 @@ int divpwr2(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+	int neg,res;
+	neg = ~x ; 
+	res = neg +1;
+  return res;
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
@@ -257,7 +267,7 @@ int negate(int x) {
  *   Rating: 3
  */
 int isPositive(int x) {
-  return (((x|0x7fffffff)+0xffffffff)>>31) +1;
+  return (!(x>>31))- !(x^0x00000000);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -267,7 +277,11 @@ int isPositive(int x) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  return 2;
+	long diff; 
+	diff = x-y;
+//	printf(" %d %d diff>>31 :  %x && diff^0x00000000 %x \n",x,y,diff>>31,diff^0x00000000);
+	
+  return (!!(diff>>31) ) + (!( diff^0x00000000)) ;
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
