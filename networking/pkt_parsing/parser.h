@@ -19,3 +19,6 @@ typedef enum ether_proto{
 	ETHER_MPLS_UC	= 0x8847,
 	ETHER_MPLS_MC	= 0x8848
 }ETHER_PROTO;
+void print_struct_sizes();
+void print_ethernet_frame(ETHERNET_FRAME *f);
+ETHER_PROTO get_ether_proto(unsigned short type);

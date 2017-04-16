@@ -4,9 +4,9 @@
 #include"ip_hdr.h"
 
 void print_struct_sizes(){
-	printf("Sizeof MAC_ADDR %d\n",sizeof(MAC_ADDR));
-	printf("Sizeof ETHER_TYPE %d\n",sizeof(ETHER_TYPE));
-	printf("Sizeof ETHER_FRAME %d\n",sizeof(ETHERNET_FRAME));
+	printf("Sizeof MAC_ADDR %zu\n",sizeof(MAC_ADDR));
+	printf("Sizeof ETHER_TYPE %zu\n",sizeof(ETHER_TYPE));
+	printf("Sizeof ETHER_FRAME %zu\n",sizeof(ETHERNET_FRAME));
 }
 /* The input should be in host format 
  * i.e ntohs conversion should be aleady done 

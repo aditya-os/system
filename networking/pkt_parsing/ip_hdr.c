@@ -1,6 +1,8 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include"ip_hdr.h"
 #include<string.h>
+#include"sample.h"
 #define INT_HI(a) (a >> 16)
 #define INT_LO(a) (a & 0x0000FFFF )
 /*

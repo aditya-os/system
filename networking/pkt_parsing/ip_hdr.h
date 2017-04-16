@@ -22,3 +22,7 @@ typedef struct ip_hdr{
 	IP_ADDR dst;
 	char option[];
 }IP_HDR;
+unsigned short ipv4_chksm(unsigned short *p, int len);
+int verify_ipv4_chksm(unsigned short *p,int len);
+void print_ip_hdr(IP_HDR *ip_pkt);
+void init_ipv4_hdr_wo_option(IP_HDR *ip_pkt);

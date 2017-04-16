@@ -1,15 +1,17 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include"sample.h"
+void print_mem(char *start, int len);
 void print_basic_sizes(){
-	printf("int	%d\n",sizeof(int));
-	printf("short	%d\n",sizeof(short));
-	printf("long	%d\n",sizeof(long));
-	printf("longlong%d\n",sizeof(long long));
-	printf("float	%d\n",sizeof(float));
-	printf("double	%d\n",sizeof(double));
-	printf("char	%d\n",sizeof(char));
-	printf("void *	%d\n",sizeof(void *));
+	printf("int	%zu\n",sizeof(int));
+	printf("short	%zu\n",sizeof(short));
+	printf("long	%zu\n",sizeof(long));
+	printf("longlong%zu\n",sizeof(long long));
+	printf("float	%zu\n",sizeof(float));
+	printf("double	%zu\n",sizeof(double));
+	printf("char	%zu\n",sizeof(char));
+	printf("void *	%zu\n",sizeof(void *));
 	return;
 }
 struct record{
