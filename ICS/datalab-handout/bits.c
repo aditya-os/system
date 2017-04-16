@@ -241,10 +241,13 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-	int mask = 0x80000000,neg ; 
-	neg = mask & x ; 
+	int mask,res ; 
+	mask = x>>31;
+	res = (x^mask) + (!!mask);
+	res = (res >> n);
+	res = (res^mask)+(!!mask); 
 	
-    return x>>n;
+    return res;
 }
 /* 
  * negate - return -x 

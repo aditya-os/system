@@ -17,9 +17,6 @@ void print_host_entry(struct hostent *h){
 int main(int argc, char **argv){
 	struct hostent *he;
 	struct in_addr *addr;
-	if(argc < 1){
-		exit(2);
-	}	
 	he = gethostbyname(argv[1]);
 //	print_host_entry(he);
 	server(6767);
