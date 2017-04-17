@@ -1,0 +1,10 @@
+This is simple ping application developed using C program. It uses raw sockets
+for sending and receiving ICMP echo req and reply messages.
+
+*******************************************************************************
+Usage: 
+> sudo ./myping <remote_address> <local_ip_address>
+
+Currently it is necessary to pass local ip address to be used to set ip address
+of loacl machine in outgoing IP packet. In future updates will remove this
+limitation.  

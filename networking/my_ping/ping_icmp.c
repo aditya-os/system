@@ -116,7 +116,6 @@ int recv_icmp_echo_reply(int fd,int seqno){
 	struct timeval start_time,end_time;
 	IP_HDR *ip_pkt;
 	ICMP_ECHO_REQ *icmp_echo_reply, *orignal_req;
-
 	/* Read socket for ICMP echo reply data */
 	err = read(fd,recvbuff,sizeof(recvbuff));
 	if(err < 0)

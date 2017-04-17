@@ -104,7 +104,8 @@ int main( int argc, char *argv[]){
 		alarm(1);
 		err = recv_icmp_echo_reply(fd,seq_no+1);
 		if(err){
-			printf("Received reply\n");
+			//printf("Received reply\n");
+			printf("\n");
 			end--;
 		}
 		while(loop);
