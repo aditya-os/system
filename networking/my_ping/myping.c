@@ -4,13 +4,16 @@
 #include<string.h>
 #include<sys/time.h>
 #include<time.h>
+#include<unistd.h>
 #include<sys/socket.h>
-#include<netinet/ip.h>
+#include<netinet/in.h>
 #include<netdb.h>
+#include<arpa/inet.h>
+#include"icmp_hdr.h"
 static int loop = 1;
 static int end = 5;
 static int icmp_send_count = 4;
-static start_time = 0;
+static int start_time = 0;
 void sig_handler(int sig){
 	switch(sig){
 		case SIGALRM:
@@ -97,6 +100,7 @@ int main( int argc, char *argv[]){
 	}
 	while(end){
 		send_icmp_echo_req(fd,src_ip,dst_ip,seq_no+1);
+		//printf("Sent ICMP req\n");
 		alarm(1);
 		err = recv_icmp_echo_reply(fd,seq_no+1);
 		if(err){

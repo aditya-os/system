@@ -1,14 +1,17 @@
 #include"icmp_hdr.h"
-#include"../pkt_parsing/ip_hdr.h"
+#include"../ip_hdr.h"
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
 #include<time.h>
 #include<sys/time.h>
 #include<netinet/ip.h>
+#include<arpa/inet.h>
 #include<errno.h>
 #include<string.h>
+#include<unistd.h>
 #include<assert.h>
+#include"../misc.h"
 char sendbuff[1500];
 char recvbuff[9000];
 void init_icmp_echo_req_pkt(ICMP_ECHO_REQ *icmp_pkt)
@@ -21,13 +24,13 @@ void init_icmp_echo_req_pkt(ICMP_ECHO_REQ *icmp_pkt)
 }
 void print_icmp_hdr(void *b){
 	printf("ICMP msg type & code\n");
-	print_mem(b,2);
+	print_mem((void*)b,2);
 	b+=2;
 	printf("Hdr checksum\n");
-	print_mem(b,2);
+	print_mem( (void*)b,2);
 	b+=2;
 	printf("Identifier & Seq No\n");
-	print_mem(b,4);
+	print_mem((void *)b,4);
 
 }
 void compose_ping_ip_hdr(IP_HDR *ip_pkt,char *src_ip,char * dst_ip, int icmp_payload_len){
@@ -47,10 +50,10 @@ void compose_ping_ip_hdr(IP_HDR *ip_pkt,char *src_ip,char * dst_ip, int icmp_pay
 	dst = inet_addr(dst_ip);
 	memcpy(&(ip_pkt->dst),&dst,IP_ADDR_LEN);
 	ip_pkt->hdr_chksm =0;
-	ip_pkt->hdr_chksm = ipv4_chksm(ip_pkt,ip_pkt->hdr_len*2); /* This does not require htons conversion */
+	ip_pkt->hdr_chksm = ipv4_chksm((unsigned short *)ip_pkt,ip_pkt->hdr_len*2); /* This does not require htons conversion */
 	
 	/*Verify the IP header is correct*/
-	if(!verify_ipv4_chksm(ip_pkt,ip_pkt->hdr_len*2)){
+	if(!verify_ipv4_chksm((unsigned short *)ip_pkt,ip_pkt->hdr_len*2)){
 		assert(0);
 	}
 }
@@ -65,10 +68,10 @@ void compose_ping_icmp_hdr(ICMP_ECHO_REQ *icmp_pkt,short seq_no,int icmp_payload
 	gettimeofday(&start,NULL);
 	memcpy(&(icmp_pkt->payload),&start,sizeof(start));
 	icmp_pkt->base.chksm = 0;
-	icmp_pkt->base.chksm = ipv4_chksm(icmp_pkt, (ICMP_ECHO_HDR_LEN + icmp_payload_len)/2);
+	icmp_pkt->base.chksm = ipv4_chksm((unsigned short *)icmp_pkt, (ICMP_ECHO_HDR_LEN + icmp_payload_len)/2);
 
 	/* Verify if ICMP packet checksum is correct */
-	if(!verify_ipv4_chksm(icmp_pkt,(ICMP_ECHO_HDR_LEN+icmp_payload_len)/2)){
+	if(!verify_ipv4_chksm((unsigned short *)icmp_pkt,(ICMP_ECHO_HDR_LEN+icmp_payload_len)/2)){
 		assert(0);
 	}
 }
